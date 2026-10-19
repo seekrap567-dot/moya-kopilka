@@ -293,6 +293,14 @@ footer { text-align:center; color:#a28da5; font-size:12px; padding:15px; }
   render();
 })();
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .catch(err => console.error("Ошибка Service Worker:", err));
+  });
+}
+</script>
 </body>
 </html>
 
