@@ -1,1 +1,296 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8eaf4">
+<meta name="description" content="Моя личная копилка для монет">
+<title>Моя копилка ✿</title>
+<style>
+:root {
+  --pink:#e7a8c9;
+  --lav:#c8b5ee;
+  --ink:#59465c;
+  --paper:#fffaf7;
+  --green:#b9d8c0;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:#f8edf5;
+  color:var(--ink);
+  font-family:system-ui,-apple-system,sans-serif;
+  padding:18px 14px 35px;
+}
+.app { max-width:500px; margin:auto; }
+header { text-align:center; padding:12px 0 18px; }
+h1 { margin:4px 0; font-size:30px; }
+.subtitle { font-size:14px; color:#927e96; }
+.card {
+  background:var(--paper);
+  border:2px solid #fff;
+  border-radius:24px;
+  padding:19px;
+  margin:14px 0;
+  box-shadow:0 5px 15px #7f527012;
+}
+.total {
+  text-align:center;
+  background:linear-gradient(135deg,#f5d8e8,#e3dafa);
+}
+.total small { font-size:14px; }
+.amount { font-size:43px; font-weight:800; margin:5px 0; }
+.stats { display:flex; justify-content:center; gap:20px; font-size:13px; }
+h2 { font-size:19px; margin:0 0 14px; }
+.coins { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.coin {
+  background:#fff;
+  border:1px dashed #d7b8d5;
+  border-radius:18px;
+  padding:12px 8px;
+  text-align:center;
+}
+.coin-face {
+  width:62px; height:62px; border-radius:50%;
+  display:grid; place-items:center; margin:0 auto 7px;
+  border:3px solid #fff; outline:2px solid #ead9e9;
+  font-size:22px; font-weight:800; color:#66516a;
+}
+.c1 { background:#e6d5c6; }
+.c2 { background:#d8d9e2; }
+.c5 { background:#e8cda0; }
+.c10 { background:#e9c7cf; }
+.coin-count { font-size:13px; color:#927e96; margin:5px 0 9px; }
+button {
+  font:inherit; cursor:pointer; border:0; border-radius:13px;
+  padding:10px 12px; background:#e9c5df; color:#563c59;
+  font-weight:650;
+}
+button:active { transform:scale(.97); }
+.add-one { width:100%; }
+.row { display:flex; gap:8px; align-items:center; }
+.row input { min-width:0; flex:1; }
+input,select {
+  width:100%; border:1px solid #e3cde0; border-radius:12px;
+  background:white; color:var(--ink); padding:12px;
+  font:inherit; margin:5px 0 10px;
+}
+label { font-size:13px; color:#826e89; }
+.primary { background:#cbb7ee; }
+.secondary { background:#eae2ed; }
+.danger { background:#f3d6d8; }
+.progress-bg { height:12px; background:#eee3ef; border-radius:20px; overflow:hidden; }
+.progress-fill { height:100%; width:0; background:linear-gradient(90deg,#e7a8c9,#bca9ed); transition:width .3s; }
+.progress-text { font-size:13px; margin-top:8px; }
+.history-item {
+  display:flex; justify-content:space-between; align-items:center;
+  gap:8px; padding:11px 0; border-bottom:1px dashed #e8dce8;
+  font-size:13px;
+}
+.history-item:last-child { border-bottom:0; }
+.muted { color:#9988a0; font-size:13px; }
+footer { text-align:center; color:#a28da5; font-size:12px; padding:15px; }
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div style="font-size:44px">🐷</div>
+  <h1>Моя копилка ✿</h1>
+  <div class="subtitle">Маленькие монетки — большие мечты</div>
+</header>
+
+<section class="card total">
+  <small>♡ Всего накоплено ♡</small>
+  <div class="amount" id="total">0 ₽</div>
+  <div class="stats">
+    <span>🪙 <b id="coinTotal">0</b> монет</span>
+    <span>✿ <b id="progressPercent">0</b>% цели</span>
+  </div>
+</section>
+
+<section class="card">
+  <h2>🪙 Добавить монетки</h2>
+  <div class="coins" id="coins"></div>
+  <p class="muted">Нажимай «+1 монета» или укажи количество ниже.</p>
+  <label for="denomination">Номинал монеты</label>
+  <select id="denomination">
+    <option value="1">1 рубль</option>
+    <option value="2">2 рубля</option>
+    <option value="5">5 рублей</option>
+    <option value="10">10 рублей</option>
+  </select>
+  <label for="quantity">Сколько монет добавить</label>
+  <div class="row">
+    <input id="quantity" type="number" min="1" max="100000" step="1" value="10" inputmode="numeric">
+    <button class="primary" id="addQuantity">Добавить</button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>🎯 Моя цель</h2>
+  <label for="goal">Сколько рублей хочу накопить</label>
+  <input id="goal" type="number" min="1" max="1000000000" step="1" placeholder="Например, 10000" inputmode="numeric">
+  <button class="primary" id="saveGoal">Сохранить цель</button>
+  <div style="height:15px"></div>
+  <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">Укажи свою цель накоплений ✿</div>
+</section>
+
+<section class="card">
+  <h2>📜 История пополнений</h2>
+  <div id="history"><p class="muted">Пока здесь пусто. Добавь первую монетку!</p></div>
+  <button class="secondary" id="undo" style="width:100%;margin-top:12px">↶ Отменить последнее пополнение</button>
+</section>
+
+<section class="card">
+  <h2>🌷 Твоя копилка</h2>
+  <p class="muted">Все данные сохраняются в памяти браузера на этом устройстве.</p>
+  <button class="danger" id="reset" style="width:100%">Обнулить копилку</button>
+</section>
+
+<footer>С любовью к твоим мечтам ♡<br>Моя копилка · 2026</footer>
+</div>
+
+<script>
+(function(){
+  const KEY = "moya-kopilka-v1";
+  const values = [1,2,5,10];
+  const $ = id => document.getElementById(id);
+  let state = { counts:{1:0,2:0,5:0,10:0}, goal:10000, history:[] };
+
+  function load(){
+    try {
+      const saved = localStorage.getItem(KEY);
+      if(saved){
+        const data = JSON.parse(saved);
+        if(data && data.counts && data.history){
+          state.counts = Object.fromEntries(values.map(v=>[
+            v, Math.max(0, Math.floor(Number(data.counts[v]) || 0))
+          ]));
+          state.goal = Math.max(1, Number(data.goal) || 10000);
+          state.history = Array.isArray(data.history)
+            ? data.history.filter(x=>x && values.includes(Number(x.value))
+                && Number.isFinite(Number(x.count)) && Number(x.count)>0
+                && Number.isFinite(Number(x.time)))
+            : [];
+        }
+      }
+    } catch(e) {
+      alert("Не удалось прочитать сохранённые данные. Не очищай данные браузера.");
+    }
+  }
+
+  function save(){
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+      return true;
+    } catch(e) {
+      alert("Не удалось сохранить данные. Проверь свободное место и настройки браузера.");
+      return false;
+    }
+  }
+
+  function money(n){
+    return n.toLocaleString("ru-RU") + " ₽";
+  }
+  function total(){
+    return values.reduce((sum,v)=>sum+v*state.counts[v],0);
+  }
+  function countAll(){
+    return values.reduce((sum,v)=>sum+state.counts[v],0);
+  }
+  function add(value,count){
+    value = Number(value);
+    count = Math.floor(Number(count));
+    if(!values.includes(value) || !Number.isSafeInteger(count) || count<1 || count>100000){
+      alert("Укажи количество монет от 1 до 100000.");
+      return;
+    }
+    if(!Number.isSafeInteger(state.counts[value]+count) ||
+       !Number.isSafeInteger(total()+value*count)){
+      alert("Слишком большое количество монет.");
+      return;
+    }
+    state.counts[value] += count;
+    state.history.unshift({value,count,time:Date.now()});
+    state.history = state.history.slice(0,200);
+    if(save()) render();
+  }
+
+  function render(){
+    $("total").textContent = money(total());
+    $("coinTotal").textContent = countAll().toLocaleString("ru-RU");
+    $("goal").value = state.goal;
+    const pct = Math.min(100, Math.floor(total()/state.goal*100));
+    $("progressPercent").textContent = pct;
+    $("progressFill").style.width = pct+"%";
+    $("progressText").textContent = total()>=state.goal
+      ? "🎉 Цель достигнута! Ты большая умница!"
+      : "Осталось накопить "+money(state.goal-total());
+
+    $("coins").innerHTML = values.map(v=>`
+      <div class="coin">
+        <div class="coin-face c${v}">${v} ₽</div>
+        <b>${money(v*state.counts[v])}</b>
+        <div class="coin-count">${state.counts[v]} монет</div>
+        <button class="add-one" data-add="${v}">＋ 1 монета</button>
+      </div>
+    `).join("");
+
+    $("history").innerHTML = state.history.length
+      ? state.history.map(x=>`
+        <div class="history-item">
+          <span>🪙 ${x.count} × ${x.value} ₽<br>
+          <span class="muted">${new Date(x.time).toLocaleString("ru-RU")}</span></span>
+          <b>+${money(x.count*x.value)}</b>
+        </div>
+      `).join("")
+      : '<p class="muted">Пока здесь пусто. Добавь первую монетку!</p>';
+    $("undo").disabled = !state.history.length;
+    $("undo").style.opacity = state.history.length ? "1" : ".5";
+  }
+
+  $("coins").addEventListener("click",e=>{
+    const btn = e.target.closest("[data-add]");
+    if(btn) add(Number(btn.dataset.add),1);
+  });
+
+  $("addQuantity").addEventListener("click",()=>{
+    add($("denomination").value,$("quantity").value);
+  });
+
+  $("saveGoal").addEventListener("click",()=>{
+    const n = Number($("goal").value);
+    if(!Number.isSafeInteger(n) || n<1 || n>1000000000){
+      alert("Введи цель от 1 до 1 000 000 000 рублей.");
+      return;
+    }
+    state.goal=n;
+    if(save()) render();
+  });
+
+  $("undo").addEventListener("click",()=>{
+    const last=state.history[0];
+    if(!last) return;
+    if(!confirm("Отменить последнее пополнение на "+money(last.value*last.count)+"?")) return;
+    state.counts[last.value]=Math.max(0,state.counts[last.value]-last.count);
+    state.history.shift();
+    if(save()) render();
+  });
+
+  $("reset").addEventListener("click",()=>{
+    if(!confirm("Обнулить все накопления и удалить историю? Это действие нельзя отменить.")) return;
+    const oldGoal=state.goal;
+    state={counts:{1:0,2:0,5:0,10:0},goal:oldGoal,history:[]};
+    if(save()) render();
+  });
+
+  load();
+  render();
+})();
+</script>
+</body>
+</html>
+
