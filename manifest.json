@@ -1,0 +1,13 @@
+
+{
+  "name": "Моя копилка",
+  "short_name": "Копилка",
+  "description": "Моя личная копилка для монет",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8edf5",
+  "theme_color": "#f8eaf4"
+}
