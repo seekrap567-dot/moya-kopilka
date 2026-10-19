@@ -9,5 +9,12 @@
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f8edf5",
-  "theme_color": "#f8eaf4"
+  "theme_color": "#f8eaf4",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
 }
